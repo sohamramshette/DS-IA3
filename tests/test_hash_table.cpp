@@ -15,6 +15,8 @@
 #include <vector>
 #include <cassert>
 
+using namespace std;
+
 const int TABLE_SIZE = 11;
 
 // Allocation tracking for memory leak verification
