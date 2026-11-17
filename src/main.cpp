@@ -13,8 +13,8 @@
  *   - Domain Scenario      : Mango Varieties
  *   - Dataset Size         : 20
  *   - Hashing Method       : Mid-Square Method
- *   - Collision Resolution : Separate Chaining
- *   - Table Size           : 11 (Configurable)
+ *   - Collision Resolution : Separate Chaining (Singly Linked List)
+ *   - Hash Table Size      : 11 (Configurable)
  *
  * Dataset Generation Formula:
  *   v[i] = (69 + 13 * i) % 100
@@ -30,8 +30,17 @@
 #include <sstream>
 #include <vector>
 
-// Proposed Table Size (Configurable constant)
+// Configurable Hash Table Size
 const int TABLE_SIZE = 11;
+
+// Node structure for Separate Chaining (Singly Linked List)
+struct Node {
+    int key;
+    Node* next;
+
+    // Constructor to initialize a new node
+    Node(int k) : key(k), next(nullptr) {}
+};
 
 /**
  * Mid-Square Hash Function
@@ -64,6 +73,52 @@ int midSquareHash(int key, int tableSize) {
     std::string midStr = "";
     int midDigits = 0;
     return midSquareHash(key, tableSize, square, fourDigitStr, midStr, midDigits);
+}
+
+/**
+ * Inserts a key into the Hash Table using Separate Chaining.
+ * Preserves insertion order by appending new nodes to the end of the chain.
+ * Returns true if inserted, false if duplicate.
+ */
+bool insertKey(Node* table[], int key, int tableSize, int &index, bool &isCollision) {
+    index = midSquareHash(key, tableSize);
+    Node* newNode = new Node(key);
+    
+    // If the bucket is empty, start a new chain
+    if (table[index] == nullptr) {
+        table[index] = newNode;
+        isCollision = false;
+        return true;
+    }
+    
+    // Collision occurred: bucket already contains one or more nodes
+    isCollision = true;
+    Node* current = table[index];
+    
+    // Check head for duplicate
+    if (current->key == key) {
+        delete newNode;
+        return false;
+    }
+    
+    // Traverse to the end of the chain
+    while (current->next != nullptr) {
+        if (current->key == key) {
+            delete newNode;
+            return false;
+        }
+        current = current->next;
+    }
+    
+    // Check the last node for duplicate
+    if (current->key == key) {
+        delete newNode;
+        return false;
+    }
+    
+    // Append at the end of the existing chain
+    current->next = newNode;
+    return true;
 }
 
 /**
@@ -132,11 +187,29 @@ void displayHashCalculations(const std::vector<int>& dataset, int tableSize) {
     std::cout << "+-----+--------+------------------------+---------------+------------+\n\n";
 }
 
+/**
+ * Frees all dynamically allocated linked-list nodes to prevent memory leaks
+ */
+void freeHashTable(Node* table[], int tableSize) {
+    for (int i = 0; i < tableSize; ++i) {
+        Node* current = table[i];
+        while (current != nullptr) {
+            Node* temp = current;
+            current = current->next;
+            delete temp;
+        }
+        table[i] = nullptr;
+    }
+}
+
 int main() {
     // Personalized dataset of 20 integers generated using v[i] = (69 + 13 * i) % 100
     const std::vector<int> dataset = {
         69, 82, 95, 8, 21, 34, 47, 60, 73, 86, 99, 12, 25, 38, 51, 64, 77, 90, 3, 16
     };
+    
+    // Hash Table initialized to nullptr
+    Node* hashTable[TABLE_SIZE] = { nullptr };
     
     // A. Display Student Details
     displayStudentDetails();
@@ -146,6 +219,16 @@ int main() {
     
     // C. Display Hash Calculations Table
     displayHashCalculations(dataset, TABLE_SIZE);
+    
+    // Insert keys into hash table
+    for (int key : dataset) {
+        int index = -1;
+        bool isCollision = false;
+        insertKey(hashTable, key, TABLE_SIZE, index, isCollision);
+    }
+    
+    // Free allocated memory
+    freeHashTable(hashTable, TABLE_SIZE);
     
     return 0;
 }
