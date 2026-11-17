@@ -25,17 +25,127 @@
  */
 
 #include <iostream>
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include <vector>
 
 // Proposed Table Size (Configurable constant)
 const int TABLE_SIZE = 11;
 
+/**
+ * Mid-Square Hash Function
+ * 1. Computes square of the key.
+ * 2. Formats square as a 4-digit zero-padded string.
+ * 3. Extracts middle two digits (indices 1 and 2).
+ * 4. Returns (middleTwoDigits % TABLE_SIZE).
+ */
+int midSquareHash(int key, int tableSize, int &square, std::string &fourDigitStr, std::string &midStr, int &midDigits) {
+    square = key * key;
+    
+    // Format into 4-digit representation with leading zeros
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(4) << square;
+    fourDigitStr = oss.str();
+    
+    // Extract middle two digits (characters at index 1 and index 2)
+    midStr = fourDigitStr.substr(1, 2);
+    midDigits = std::stoi(midStr);
+    
+    // Calculate hash index
+    int hashIndex = midDigits % tableSize;
+    return hashIndex;
+}
+
+// Convenience wrapper for hash calculation
+int midSquareHash(int key, int tableSize) {
+    int square = 0;
+    std::string fourDigitStr = "";
+    std::string midStr = "";
+    int midDigits = 0;
+    return midSquareHash(key, tableSize, square, fourDigitStr, midStr, midDigits);
+}
+
+/**
+ * Displays Section A: Student and Project Details
+ */
+void displayStudentDetails() {
+    std::cout << "========================================================================\n";
+    std::cout << "                DATA STRUCTURES IA 3 - HASH TABLE PROJECT               \n";
+    std::cout << "========================================================================\n";
+    std::cout << " Student Name        : Soham Balaji Ramshette\n";
+    std::cout << " PRN                 : 202501100069\n";
+    std::cout << " Subject             : Data Structures (Course Code: 2310212 T)\n";
+    std::cout << " College             : MIT Academy of Engineering, Alandi\n";
+    std::cout << " Personalization Seed: 69\n";
+    std::cout << " Domain Scenario     : Mango Varieties Inventory\n";
+    std::cout << " Dataset Size        : 20 integers\n";
+    std::cout << " Hash Table Size (M) : " << TABLE_SIZE << " (Configurable)\n";
+    std::cout << " Hashing Method      : Mid-Square Method\n";
+    std::cout << " Collision Handling  : Separate Chaining (Singly Linked List)\n";
+    std::cout << "========================================================================\n\n";
+}
+
+/**
+ * Displays Section B: Personalized Dataset
+ */
+void displayDataset(const std::vector<int>& dataset) {
+    std::cout << "------------------------------------------------------------------------\n";
+    std::cout << " B. PERSONALIZED DATASET (20 Keys generated via (69 + 13 * i) % 100):\n";
+    std::cout << "------------------------------------------------------------------------\n";
+    for (size_t i = 0; i < dataset.size(); ++i) {
+        std::cout << dataset[i];
+        if (i + 1 < dataset.size()) {
+            std::cout << ", ";
+        }
+        if ((i + 1) % 10 == 0) {
+            std::cout << "\n";
+        }
+    }
+    std::cout << "\n";
+}
+
+/**
+ * Displays Section C: Detailed Mid-Square Hash Calculations Table
+ */
+void displayHashCalculations(const std::vector<int>& dataset, int tableSize) {
+    std::cout << "------------------------------------------------------------------------\n";
+    std::cout << " C. MID-SQUARE HASH CALCULATION TABLE:\n";
+    std::cout << "------------------------------------------------------------------------\n";
+    std::cout << "+-----+--------+------------------------+---------------+------------+\n";
+    std::cout << "| Key | Square | Four-digit (Padded)    | Middle digits | Hash index |\n";
+    std::cout << "+-----+--------+------------------------+---------------+------------+\n";
+    
+    for (int key : dataset) {
+        int square = 0;
+        std::string fourDigits = "";
+        std::string midStr = "";
+        int midDigits = 0;
+        int index = midSquareHash(key, tableSize, square, fourDigits, midStr, midDigits);
+        
+        std::cout << "| " << std::setw(3) << key << " "
+                  << "| " << std::setw(6) << square << " "
+                  << "| " << std::setw(22) << fourDigits << " "
+                  << "| " << std::setw(13) << midStr << " "
+                  << "| " << std::setw(10) << index << " |\n";
+    }
+    std::cout << "+-----+--------+------------------------+---------------+------------+\n\n";
+}
+
 int main() {
-    std::cout << "==========================================================" << std::endl;
-    std::cout << " Hash Table: Mid-Square Hashing & Separate Chaining       " << std::endl;
-    std::cout << " Student: Soham Balaji Ramshette | PRN: 202501100069       " << std::endl;
-    std::cout << " Domain : Mango Varieties Inventory                       " << std::endl;
-    std::cout << "==========================================================" << std::endl;
-    std::cout << "Phase 1 environment setup verified successfully." << std::endl;
-    std::cout << "Awaiting confirmation to proceed to Phase 2 implementation." << std::endl;
+    // Personalized dataset of 20 integers generated using v[i] = (69 + 13 * i) % 100
+    const std::vector<int> dataset = {
+        69, 82, 95, 8, 21, 34, 47, 60, 73, 86, 99, 12, 25, 38, 51, 64, 77, 90, 3, 16
+    };
+    
+    // A. Display Student Details
+    displayStudentDetails();
+    
+    // B. Display Personalized Dataset
+    displayDataset(dataset);
+    
+    // C. Display Hash Calculations Table
+    displayHashCalculations(dataset, TABLE_SIZE);
+    
     return 0;
 }
