@@ -100,4 +100,5 @@ g++ -std=c++11 -Wall -Wextra -pedantic tests/test_hash_table.cpp -o bin/test_has
 - **Phase 1: Project Setup & Environment Preparation** (Completed)
 - **Phase 2: Core Data Structure & Hashing Implementation** (Completed)
 - **Phase 3: Verification, Tracing & Unit Testing** (Completed)
-- **Phase 4: Git Version Control & Commit Milestones** (In Progress)
+- **Phase 4: Git Version Control & Commit Milestones** (Completed - 6 Commits)
+- **Phase 5: Viva Preparation & Final Demonstration** (Pending)
