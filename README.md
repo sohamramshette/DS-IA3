@@ -23,11 +23,11 @@ This project implements a Hash Table in standard C++ designed for practical unde
 | Parameter | Assigned Value |
 | :--- | :--- |
 | **Seed** | 69 |
-| **Domain Scenario** | Mango Varieties |
+| **Domain Scenario** | Mango Varieties Inventory |
 | **Dataset Size** | 20 records |
 | **Hashing Method** | Mid-Square Method |
-| **Collision Resolution** | Separate Chaining (Linked List) |
-| **Proposed Table Size** | 11 (Configurable constant) |
+| **Collision Resolution** | Separate Chaining (Singly Linked List) |
+| **Proposed Table Size ($M$)** | 11 (Configurable constant) |
 
 ---
 
@@ -56,7 +56,7 @@ DS_IA3_HashTable/
 │   └── test_hash_table.cpp    # Automated unit tests and invariant verification suite
 │
 ├── docs/
-│   ├── debugging_log.md       # Log of test cases, edge cases, and bug resolutions
+│   ├── debugging_log.md       # Detailed technical log per commit, observations & fixes
 │   └── trace_match_report.md  # Step-by-step mathematical trace matching manual calculations
 │
 ├── screenshots/               # Output execution screenshots for demonstration/viva
@@ -96,9 +96,35 @@ g++ -std=c++11 -Wall -Wextra -pedantic tests/test_hash_table.cpp -o bin/test_has
 
 ---
 
-## 7. Status & Phases
+## 7. Expected Final Hash Table & Statistics
+
+### Expected Bucket Distribution:
+```text
+Index 0: 21 -> 38 -> 3
+Index 1: NULL
+Index 2: 95
+Index 3: 99 -> 12 -> 16
+Index 4: 34 -> 77
+Index 5: 60 -> 51
+Index 6: 82 -> 8 -> 86
+Index 7: 25
+Index 8: NULL
+Index 9: 47 -> 64
+Index 10: 69 -> 73 -> 90
+```
+
+### Summary Metrics:
+- **Total Inserted Keys:** 20 / 20 (All keys accounted for)
+- **Total Collisions:** 11
+- **Empty Buckets:** 2 (Index 1 and Index 8)
+- **Occupied Buckets:** 9
+- **Load Factor ($\alpha$):** $\frac{N}{M} = \frac{20}{11} \approx 1.82$
+
+---
+
+## 8. Status & Phases
 - **Phase 1: Project Setup & Environment Preparation** (Completed)
 - **Phase 2: Core Data Structure & Hashing Implementation** (Completed)
 - **Phase 3: Verification, Tracing & Unit Testing** (Completed)
 - **Phase 4: Git Version Control & Commit Milestones** (Completed - 6 Commits)
-- **Phase 5: Viva Preparation & Final Demonstration** (Pending)
+- **Phase 5: Documentation Audit and Finalization** (Completed)
